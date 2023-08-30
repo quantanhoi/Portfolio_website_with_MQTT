@@ -11,5 +11,10 @@
   ],
   "author": "Trung Thieu Quang",
   "license": "UNLICENSED",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "google-protobuf": "^3.21.2",
+    "grpc-web": "^1.4.2",
+    "protobufjs": "^7.2.5"
+  }
 }

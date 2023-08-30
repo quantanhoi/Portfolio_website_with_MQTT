@@ -1,7 +1,7 @@
-
+const url = 'http://127.0.0.1:3000/';
 document.addEventListener('DOMContentLoaded', (event) => {
     // Fetch the skills from the server
-    fetch('http://127.0.0.1:3000/skill')
+    fetch(`${url}skill`)
         .then(response => response.json())
         .then(skills => {
             // Get the ul element

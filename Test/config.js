@@ -1,8 +1,12 @@
 import pkg from 'pg';
 import express from 'express';
 import cors from 'cors';
+import mqtt from 'mqtt';
+
 const {Client} = pkg;
 
+
+import * as messages from './message_pb.js';
 //import the entire pg module as a single object, and then extract the Client class from that object.
 
 const app = express();
@@ -53,4 +57,30 @@ app.get('/project', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
+});
+
+const mqttClient = mqtt.connect('mqtt://broker.hivemq.com');
+
+client.on('connect', function () {
+    console.log('Successfully connected to the HiveMQ broker');
+    // Add additional code here
+});
+
+client.on('error', function (error) {
+    console.log('Error connecting to the HiveMQ broker:', error);
+    // Handle error
+});
+
+
+client.subscribe('Trung Thieu Quang Portfolio test', function (error) {
+    if (!error) {
+        console.log('Successfully subscribed to the topic');
+    } else {
+        console.log('Error subscribing to the topic:', error);
+    }
+});
+
+client.on('message', function (topic, message) {
+    console.log('Received message:', message.toString());
+    // Handle incoming message
 });
