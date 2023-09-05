@@ -5,8 +5,15 @@ import mqtt from 'mqtt';
 
 const {Client} = pkg;
 
+class mqttMessage {
+    constructor(sender, recipient, message) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.message = message;
+    }
+}
 
-import * as messages from './message_pb.js';
+
 //import the entire pg module as a single object, and then extract the Client class from that object.
 
 const app = express();
@@ -19,6 +26,7 @@ const client = new Client({
     user: 'postgres',
     password: '1234'
 });
+
 await client.connect();
 async function getSkill() {
     
@@ -61,18 +69,18 @@ app.listen(port, () => {
 
 const mqttClient = mqtt.connect('mqtt://broker.hivemq.com');
 
-client.on('connect', function () {
+mqttClient.on('connect', function () {
     console.log('Successfully connected to the HiveMQ broker');
     // Add additional code here
 });
 
-client.on('error', function (error) {
+mqttClient.on('error', function (error) {
     console.log('Error connecting to the HiveMQ broker:', error);
     // Handle error
 });
 
 
-client.subscribe('Trung Thieu Quang Portfolio test', function (error) {
+mqttClient.subscribe('Trung Thieu Quang Portfolio test', function (error) {
     if (!error) {
         console.log('Successfully subscribed to the topic');
     } else {
@@ -80,7 +88,7 @@ client.subscribe('Trung Thieu Quang Portfolio test', function (error) {
     }
 });
 
-client.on('message', function (topic, message) {
+mqttClient.on('message', function (topic, message) {
     console.log('Received message:', message.toString());
     // Handle incoming message
 });

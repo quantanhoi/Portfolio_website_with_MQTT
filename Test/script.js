@@ -1,4 +1,11 @@
 const url = 'http://127.0.0.1:3000/';
+class mqttMessage {
+    constructor(sender, recipient, message) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.message = message;
+    }
+}
 document.addEventListener('DOMContentLoaded', (event) => {
     // Fetch the skills from the server
     fetch(`${url}skill`)
@@ -16,3 +23,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
         })
         .catch(error => console.error('Error:', error));
 });
+
+
