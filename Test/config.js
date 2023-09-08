@@ -44,6 +44,7 @@ async function getProject() {
     return result.rows;
 
 }
+
 let testResult;
 //because javascript is asynchronous so getSkill.then will likely get executed after 
 //console.log(testResult) and this is where the variable has not been set, therefore it is undefined
