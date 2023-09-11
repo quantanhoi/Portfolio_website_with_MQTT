@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         .then(skills => {
             // Get the ul element
             const ul = document.getElementById('skills');
+            console.log(skills);
             // Populate the ul with the skills
             skills.forEach(skill => {
                 const li = document.createElement('li');
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             data.forEach(project => {
                 const projectElement = document.createElement('div');
                 projectElement.classList.add('project');
+                console.log(project);
                 const url = new URL(project.url);
                 const croppedString = url.pathname.slice(1); // remove the leading slash
                 console.log(croppedString); // logs example: quantanhoi/url_alias_store

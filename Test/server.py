@@ -23,19 +23,39 @@ connection = psycopg2.connect(
     password="1234"
 )
 
-def get_skill():
-    with connection:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM skill")
-            result = cursor.fetchall()
-            return result
 
+# when we simply use cursor.execute here, python doesn't automatically fetch the sql database with json format, therefore no columns name
+# that's why we need to use cursor.descriptions here
+# def get_skill():
+#     with connection.cursor() as cursor:
+#         cursor.execute("SELECT * FROM skill")
+#         result = cursor.fetchall()
+#         return result
+def get_skill():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM skill")
+        result = cursor.fetchall()
+        # Get the column names
+        column_names = [desc[0] for desc in cursor.description]
+        # Convert each row into a dictionary where the key is the column name
+        skills = [dict(zip(column_names, row)) for row in result]
+        return skills
+
+# def get_project():
+#     with connection.cursor() as cursor:
+#         cursor.execute("SELECT * FROM project")
+#         result = cursor.fetchall()
+#         return result
 def get_project():
-    with connection:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM project")
-            result = cursor.fetchall()
-            return result
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM project")
+        result = cursor.fetchall()
+        # Get the column names
+        column_names = [desc[0] for desc in cursor.description]
+        # Convert each row into a dictionary where the key is the column name
+        projects = [dict(zip(column_names, row)) for row in result]
+        return projects
+
 
 @app.route('/skill')
 def skill_endpoint():
