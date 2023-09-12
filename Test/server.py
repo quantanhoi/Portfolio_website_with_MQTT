@@ -55,7 +55,14 @@ def get_project():
         # Convert each row into a dictionary where the key is the column name
         projects = [dict(zip(column_names, row)) for row in result]
         return projects
-
+    
+def get_contacts():
+    with connection.cursor() as cursor:
+        cursor.execute("Select * from contact")
+        result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        contacts = [dict(zip(column_names, row)) for row in result]
+        return contacts
 
 @app.route('/skill')
 def skill_endpoint():
@@ -68,6 +75,12 @@ def project_endpoint():
     projects = get_project()
     print(projects)
     return jsonify(projects)
+
+@app.route('/contact')
+def contact_endpoint():
+    contacts = get_contacts()
+    print(contacts)
+    return jsonify(contacts)
 
 # MQTT configuration
 def on_connect(client, userdata, flags, rc):

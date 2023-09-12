@@ -36,17 +36,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const response = await fetch(`https://api.github.com/repos/${croppedString}`);
                     const data = await response.json();
                     const project_description = data.description;
-            
+
                     projectElement.innerHTML = `
                         <img src="${project.icon}" alt="${project.name}">
                         <h3>${project.name}</h3>
                         <p>${project_description || 'This is the project description.'}</p>
                     `;
                     projectsContainer.appendChild(projectElement);
+                    projectElement.addEventListener('click', function () {
+                        window.location.href = project.url;
+                    });
                 })();
             });
         })
         .catch(error => console.error(error));
+
+    fetch(`${url}contact`)
+        .then(response => response.json())
+        .then(data => {
+            const contactContainer = document.querySelector('.contacts');
+            data.forEach(contact => {
+                const contactElement = document.createElement('div');
+                contactElement.classList.add('contact');
+
+                contactElement.innerHTML = `
+                <h3>${contact.name}</h3>
+                <p>${contact.detail}</p>
+            `;
+                contactContainer.appendChild(contactElement);
+                if(contact.detail.substring(0,4) == "http") {
+                    contactElement.addEventListener('click', function () {
+                        window.location.href = contact.detail;
+                    });
+                }
+            });
+        })
+        .catch(error => console.error(error));
+
 });
 
 

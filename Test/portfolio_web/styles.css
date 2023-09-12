@@ -78,6 +78,10 @@ h3 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.project:hover {
+    border: 2px solid black;
+}
+
 .project img {
     width: 100%;
     height: auto;
@@ -91,4 +95,39 @@ footer {
     text-align: center;
     padding: 1rem 0;
     color: white;
+}
+
+.contacts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: transparent;
+}
+
+.contact {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.contact h3 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.contact p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.contact:hover {
+    border: 3px solid black;
 }
