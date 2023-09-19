@@ -2,6 +2,13 @@ from flask import Flask, jsonify
 import paho.mqtt.client as mqtt
 from flask_cors import CORS
 import json
+from queue import Queue
+
+# create queues
+skill_queue = Queue()
+contact_queue = Queue()
+project_queue = Queue()
+
 app = Flask(__name__)
 CORS(app)
 
@@ -16,28 +23,7 @@ class MqttMessage:
     def to_json(self):
         return json.dumps(self.__dict__)
 
-#mqtt section
-def get_skill():
-    msg = MqttMessage("awsServer", "homeServer", "getSkill", None)
-    mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
-
-def get_project():
-    msg = MqttMessage("awsServer", "homeServer", "getProject", None)
-    mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
-
-def get_contacts():
-    msg = MqttMessage("awsServer", "homeServer", "getContacts", None)
-    mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
-
-def process_message(message):
-    # Your function logic goes here
-    pass
-
-def on_message(client, userdata, msg):
-    print("Received message:", msg.payload.decode())
-    process_message(msg.payload.decode())
-
-
+serverName = "awsServer"
 #https requests handling
 @app.route('/skill')
 def skill_endpoint():
@@ -58,26 +44,44 @@ def contact_endpoint():
     return jsonify(contacts)
 
 
+
+
+
+
+
+
+
+
 #MQTT Section
 def get_skill():
-    msg = MqttMessage("awsServer", "homeServer", "getSkill")
+    msg = MqttMessage("awsServer", "homeServer", "getSkill", None)
     mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
+    result = skill_queue.get()
+    return result
+
 
 def get_project():
-    msg = MqttMessage("awsServer", "homeServer", "getProject")
+    msg = MqttMessage("awsServer", "homeServer", "getProject", None)
     mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
+    result = project_queue.get()
+    return result
+
+
 
 def get_contacts():
-    msg = MqttMessage("awsServer", "homeServer", "getContacts")
+    msg = MqttMessage("awsServer", "homeServer", "getContact", None)
     mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
+    result = contact_queue.get()
+    return result
+
+
+
+
 
 def process_message(message):
     # Your function logic goes here
     pass
 
-def on_message(client, userdata, msg):
-    print("Received message:", msg.payload.decode())
-    process_message(msg.payload.decode())
 
 # MQTT configuration
 def on_connect(client, userdata, flags, rc):
@@ -85,7 +89,23 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("Trung Thieu Quang Portfolio test")
 
 def on_message(client, userdata, msg):
-    print("Received message:", msg.payload.decode())
+    message = json.loads(msg.payload.decode())
+    print("Received message:", message)
+    if message['recipient'] == serverName:
+        if message['message'] == "skill":
+            skills = message['data']
+            skill_queue.put(skills)
+        elif message['message'] == "contact":
+            contacts = message['data']
+            contact_queue.put(contacts)
+        elif message['message'] == "project":
+            projects = message['data']
+            project_queue.put(projects)
+
+
+def write_response_skill(skills):
+    return skills
+
 
 def on_subscribe(client, userdata, mid, granted_qos):
     print("Successfully subscribed to the topic")
@@ -102,5 +122,10 @@ mqtt_client.connect('broker.hivemq.com', 1883, 60)
 
 if __name__ == '__main__':
     mqtt_client.loop_start()
+    # get_skill()
     app.run(host='localhost', port=3000)
+    #app.run(host='localhost', port=3000) is a blocking function, this will keep your 
+    #program running until flask web server is stopped
+    #then the next line to execute will be loop_stop()
     mqtt_client.loop_stop()
+
