@@ -123,7 +123,7 @@ mqtt_client.connect('broker.hivemq.com', 1883, 60)
 if __name__ == '__main__':
     mqtt_client.loop_start()
     # get_skill()
-    app.run(host='localhost', port=3000)
+    app.run(host='0.0.0.0', port=3000)
     #app.run(host='localhost', port=3000) is a blocking function, this will keep your 
     #program running until flask web server is stopped
     #then the next line to execute will be loop_stop()
