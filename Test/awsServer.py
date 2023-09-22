@@ -11,7 +11,7 @@ project_queue = Queue()
 
 app = Flask(__name__)
 CORS(app)
-
+hiveMQ_server = "Insert your hiveMQ server channel here"
 
 class MqttMessage:
     def __init__(self, sender, recipient, message, data):
@@ -24,6 +24,7 @@ class MqttMessage:
         return json.dumps(self.__dict__)
 
 serverName = "awsServer"
+homeServer = "homeServer"
 #https requests handling
 @app.route('/skill')
 def skill_endpoint():
@@ -54,23 +55,23 @@ def contact_endpoint():
 
 #MQTT Section
 def get_skill():
-    msg = MqttMessage("awsServer", "homeServer", "getSkill", None)
-    mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
+    msg = MqttMessage(serverName, homeServer, "getSkill", None)
+    mqtt_client.publish(hiveMQ_server, msg.to_json())
     result = skill_queue.get()
     return result
 
 
 def get_project():
-    msg = MqttMessage("awsServer", "homeServer", "getProject", None)
-    mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
+    msg = MqttMessage(serverName, homeServer, "getProject", None)
+    mqtt_client.publish(hiveMQ_server, msg.to_json())
     result = project_queue.get()
     return result
 
 
 
 def get_contacts():
-    msg = MqttMessage("awsServer", "homeServer", "getContact", None)
-    mqtt_client.publish("Trung Thieu Quang Portfolio test", msg.to_json())
+    msg = MqttMessage(serverName, homeServer, "getContact", None)
+    mqtt_client.publish(hiveMQ_server, msg.to_json())
     result = contact_queue.get()
     return result
 
@@ -86,7 +87,7 @@ def process_message(message):
 # MQTT configuration
 def on_connect(client, userdata, flags, rc):
     print("Successfully connected to the HiveMQ broker")
-    client.subscribe("Trung Thieu Quang Portfolio test")
+    client.subscribe(hiveMQ_server)
 
 def on_message(client, userdata, msg):
     message = json.loads(msg.payload.decode())

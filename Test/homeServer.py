@@ -3,7 +3,7 @@ import psycopg2
 import paho.mqtt.client as mqtt
 import json
 import time
-
+hiveMQ_server = "Insert your hiveMQ server channel here"
 class MqttMessage:
     def __init__(self, sender, recipient, message, data):
         self.sender = sender
@@ -70,15 +70,15 @@ def on_message(client, userdata, msg):
         if(message['message'] == "getSkill"):
             skills = get_skill()
             new_msg = MqttMessage(serverName, senderName, "skill", skills)
-            mqtt_client.publish("Trung Thieu Quang Portfolio test", new_msg.to_json())
+            mqtt_client.publish(hiveMQ_server, new_msg.to_json())
         elif(message['message'] == "getProject"):
             projects  = get_project()
             new_msg = MqttMessage(serverName, senderName, "project", projects)
-            mqtt_client.publish("Trung Thieu Quang Portfolio test", new_msg.to_json())
+            mqtt_client.publish(hiveMQ_server, new_msg.to_json())
         elif(message['message'] == "getContact"):
             contacts = get_contacts()
             new_msg = MqttMessage(serverName, senderName, "contact", contacts)
-            mqtt_client.publish("Trung Thieu Quang Portfolio test", new_msg.to_json())
+            mqtt_client.publish(hiveMQ_server, new_msg.to_json())
 
 
 
