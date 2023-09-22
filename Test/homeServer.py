@@ -42,9 +42,7 @@ def get_project():
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM project")
         result = cursor.fetchall()
-        # Get the column names
         column_names = [desc[0] for desc in cursor.description]
-        # Convert each row into a dictionary where the key is the column name
         projects = [dict(zip(column_names, row)) for row in result]
         return projects
     
@@ -66,8 +64,6 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     #message received or sent should be in json format
     message = json.loads(msg.payload.decode())
-    #delay of 0.05 second won't be needed in real world, this is only to test since awsServer need some time to work properly
-    time.sleep(0.05)
     print("Received message:", message)
     if(message['recipient'] == serverName):
         senderName = message['sender']
