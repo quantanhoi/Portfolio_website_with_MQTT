@@ -4,47 +4,47 @@
 /*==============================================================*/
 
 
-drop index KATEGORIE_PK;
+drop index if exists KATEGORIE_PK;
 
-drop table Kategorie;
+drop table if exists Kategorie;
 
-drop index KATEGORIE_REZEPT_FK2;
+drop index if exists if exists KATEGORIE_REZEPT_FK2;
 
-drop index KATEGORIE_REZEPT_FK;
+drop index if exists KATEGORIE_REZEPT_FK;
 
-drop index KATEGORIE_REZEPT_PK;
+drop index if exists KATEGORIE_REZEPT_PK;
 
-drop table Kategorie_Rezept;
+drop table if exists Kategorie_Rezept;
 
-drop index REZEPT_PK;
+drop index if exists REZEPT_PK;
 
-drop table Rezept;
+drop table if exists Rezept;
 
-drop index REZEPT_REZEPTSTEP_FK;
+drop index if exists REZEPT_REZEPTSTEP_FK;
 
-drop index REZEPTSTEP_PK;
+drop index if exists REZEPTSTEP_PK;
 
-drop table RezeptStep;
+drop table if exists RezeptStep;
 
-drop index REZEPTSTEP_ZUTAT_FK2;
+drop index if exists REZEPTSTEP_ZUTAT_FK2;
 
-drop index REZEPTSTEP_ZUTAT_FK;
+drop index if exists REZEPTSTEP_ZUTAT_FK;
 
-drop index REZEPTSTEP_ZUTAT_PK;
+drop index if exists REZEPTSTEP_ZUTAT_PK;
 
-drop table RezeptStep_Zutat;
+drop table if exists RezeptStep_Zutat;
 
-drop index REZEPT_ZUTAT_FK2;
+drop index if exists REZEPT_ZUTAT_FK2;
 
-drop index REZEPT_ZUTAT_FK;
+drop index if exists REZEPT_ZUTAT_FK;
 
-drop index REZEPT_ZUTAT_PK;
+drop index if exists REZEPT_ZUTAT_PK;
 
-drop table Rezept_Zutat;
+drop table if exists Rezept_Zutat;
 
-drop index ZUTAT_PK;
+drop index if exists ZUTAT_PK;
 
-drop table Zutat;
+drop table if exists Zutat;
 
 /*==============================================================*/
 /* Table: Kategorie                                             */
