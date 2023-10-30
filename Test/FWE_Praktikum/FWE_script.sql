@@ -6,25 +6,25 @@
 
 drop index if exists KATEGORIE_PK;
 
-drop table if exists Kategorie;
+drop table if exists Kategorie cascade;
 
-drop index if exists if exists KATEGORIE_REZEPT_FK2;
+drop index if exists KATEGORIE_REZEPT_FK2;
 
 drop index if exists KATEGORIE_REZEPT_FK;
 
 drop index if exists KATEGORIE_REZEPT_PK;
 
-drop table if exists Kategorie_Rezept;
+drop table if exists Kategorie_Rezept cascade;
 
 drop index if exists REZEPT_PK;
 
-drop table if exists Rezept;
+drop table if exists Rezept cascade;
 
 drop index if exists REZEPT_REZEPTSTEP_FK;
 
 drop index if exists REZEPTSTEP_PK;
 
-drop table if exists RezeptStep;
+drop table if exists RezeptStep cascade;
 
 drop index if exists REZEPTSTEP_ZUTAT_FK2;
 
@@ -32,7 +32,7 @@ drop index if exists REZEPTSTEP_ZUTAT_FK;
 
 drop index if exists REZEPTSTEP_ZUTAT_PK;
 
-drop table if exists RezeptStep_Zutat;
+drop table if exists RezeptStep_Zutat cascade;
 
 drop index if exists REZEPT_ZUTAT_FK2;
 
@@ -40,11 +40,11 @@ drop index if exists REZEPT_ZUTAT_FK;
 
 drop index if exists REZEPT_ZUTAT_PK;
 
-drop table if exists Rezept_Zutat;
+drop table if exists Rezept_Zutat cascade;
 
 drop index if exists ZUTAT_PK;
 
-drop table if exists Zutat;
+drop table if exists Zutat cascade;
 
 /*==============================================================*/
 /* Table: Kategorie                                             */
@@ -117,7 +117,7 @@ ID
 create table RezeptStep (
    Rez_ID               bigint               not null,
    ID                   integer              not null,
-   Beschreibung         integer,
+   Beschreibung         varchar(254),
    constraint PK_REZEPTSTEP primary key (Rez_ID, ID)
 );
 
