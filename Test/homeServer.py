@@ -3,7 +3,7 @@ import psycopg2
 import paho.mqtt.client as mqtt
 import json
 import time
-hiveMQ_server = "Insert your hiveMQ server channel here"
+
 class MqttMessage:
     def __init__(self, sender, recipient, message, data):
         self.sender = sender
@@ -14,7 +14,7 @@ class MqttMessage:
     def to_json(self):
         return json.dumps(self.__dict__)
     
-
+HiveMQ_Server = "Trung Thieu Quang Portfolio test"
 serverName = "homeServer"
 # Connecting to the PostgreSQL database
 connection = psycopg2.connect(
@@ -42,7 +42,9 @@ def get_project():
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM project")
         result = cursor.fetchall()
+        # Get the column names
         column_names = [desc[0] for desc in cursor.description]
+        # Convert each row into a dictionary where the key is the column name
         projects = [dict(zip(column_names, row)) for row in result]
         return projects
     
@@ -59,26 +61,27 @@ def get_contacts():
 # MQTT configuration
 def on_connect(client, userdata, flags, rc):
     print("Successfully connected to the HiveMQ broker")
-    client.subscribe("Trung Thieu Quang Portfolio test")
+    client.subscribe(HiveMQ_Server)
 
 def on_message(client, userdata, msg):
     #message received or sent should be in json format
     message = json.loads(msg.payload.decode())
+    #delay of 0.05 second won't be needed in real world, this is only to test since awsServer need some time to work properly
     print("Received message:", message)
     if(message['recipient'] == serverName):
         senderName = message['sender']
         if(message['message'] == "getSkill"):
             skills = get_skill()
             new_msg = MqttMessage(serverName, senderName, "skill", skills)
-            mqtt_client.publish(hiveMQ_server, new_msg.to_json())
+            mqtt_client.publish(HiveMQ_Server, new_msg.to_json())
         elif(message['message'] == "getProject"):
             projects  = get_project()
             new_msg = MqttMessage(serverName, senderName, "project", projects)
-            mqtt_client.publish(hiveMQ_server, new_msg.to_json())
+            mqtt_client.publish(HiveMQ_Server, new_msg.to_json())
         elif(message['message'] == "getContact"):
             contacts = get_contacts()
             new_msg = MqttMessage(serverName, senderName, "contact", contacts)
-            mqtt_client.publish(hiveMQ_server, new_msg.to_json())
+            mqtt_client.publish(HiveMQ_Server, new_msg.to_json())
 
 
 
