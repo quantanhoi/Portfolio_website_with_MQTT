@@ -1,8 +1,18 @@
 /*==============================================================*/
-/* DBMS name:      PostgreSQL 14.x                              */
-/* Created on:     10/30/2023 7:13:15 PM                        */
+/* DBMS name:      PostgreSQL 9.x                               */
+/* Created on:     11/15/2023 8:14:33 AM                        */
 /*==============================================================*/
 
+
+drop index if exists BILD_PK;
+
+drop table if exists Bild cascade;
+
+drop index if exists INGREDIENTAMOUNT_ZUTAT_FK;
+
+drop index if exists INGREDIENT_AMOUNT_PK;
+
+drop table if exists Ingredient_Amount cascade;
 
 drop index if exists KATEGORIE_PK;
 
@@ -26,31 +36,58 @@ drop index if exists REZEPTSTEP_PK;
 
 drop table if exists RezeptStep cascade;
 
-drop index if exists REZEPTSTEP_ZUTAT_FK2;
-
-drop index if exists REZEPTSTEP_ZUTAT_FK;
-
-drop index if exists REZEPTSTEP_ZUTAT_PK;
-
-drop table if exists RezeptStep_Zutat cascade;
-
-drop index if exists REZEPT_ZUTAT_FK2;
-
-drop index if exists REZEPT_ZUTAT_FK;
-
-drop index if exists REZEPT_ZUTAT_PK;
-
-drop table if exists Rezept_Zutat cascade;
-
 drop index if exists ZUTAT_PK;
 
 drop table if exists Zutat cascade;
 
 /*==============================================================*/
+/* Table: Bild                                                  */
+/*==============================================================*/
+create table Bild (
+   URI                  VARCHAR(254)         not null,
+   Beschreibung         VARCHAR(254)         null,
+   B_ID                 INT8                 not null,
+   constraint PK_BILD primary key (B_ID)
+);
+
+/*==============================================================*/
+/* Index: BILD_PK                                               */
+/*==============================================================*/
+create unique index BILD_PK on Bild (
+B_ID
+);
+
+/*==============================================================*/
+/* Table: Ingredient_Amount                                     */
+/*==============================================================*/
+create table Ingredient_Amount (
+   R_ID                 INT8                 not null,
+   I_ID                 INT8                 not null,
+   amount               NUMERIC              null,
+   unit                 VARCHAR(254)         null,
+   constraint PK_INGREDIENT_AMOUNT primary key (R_ID, I_ID)
+);
+
+/*==============================================================*/
+/* Index: INGREDIENT_AMOUNT_PK                                  */
+/*==============================================================*/
+create unique index INGREDIENT_AMOUNT_PK on Ingredient_Amount (
+R_ID,
+I_ID
+);
+
+/*==============================================================*/
+/* Index: INGREDIENTAMOUNT_ZUTAT_FK                             */
+/*==============================================================*/
+create  index INGREDIENTAMOUNT_ZUTAT_FK on Ingredient_Amount (
+I_ID
+);
+
+/*==============================================================*/
 /* Table: Kategorie                                             */
 /*==============================================================*/
 create table Kategorie (
-   Name                 varchar(254)         not null,
+   Name                 VARCHAR(254)         not null,
    constraint PK_KATEGORIE primary key (Name)
 );
 
@@ -65,9 +102,9 @@ Name
 /* Table: Kategorie_Rezept                                      */
 /*==============================================================*/
 create table Kategorie_Rezept (
-   Name                 varchar(254)         not null,
-   ID                   bigint               not null,
-   constraint PK_KATEGORIE_REZEPT primary key (Name, ID)
+   Name                 VARCHAR(254)         not null,
+   R_ID                 INT8                 not null,
+   constraint PK_KATEGORIE_REZEPT primary key (Name, R_ID)
 );
 
 /*==============================================================*/
@@ -75,7 +112,7 @@ create table Kategorie_Rezept (
 /*==============================================================*/
 create unique index KATEGORIE_REZEPT_PK on Kategorie_Rezept (
 Name,
-ID
+R_ID
 );
 
 /*==============================================================*/
@@ -89,135 +126,80 @@ Name
 /* Index: KATEGORIE_REZEPT_FK2                                  */
 /*==============================================================*/
 create  index KATEGORIE_REZEPT_FK2 on Kategorie_Rezept (
-ID
+R_ID
 );
 
 /*==============================================================*/
 /* Table: Rezept                                                */
 /*==============================================================*/
 create table Rezept (
-   Name                 varchar(254),
-   Beschreibung         varchar(254),
-   Rating               integer,
-   Bilder               varchar(254),
-   ID                   bigint               not null,
-   constraint PK_REZEPT primary key (ID)
+   Name                 VARCHAR(254)         null,
+   Beschreibung         VARCHAR(254)         null,
+   Rating               INT4                 null,
+   R_ID                 INT8                 not null,
+   B_ID                 INT8                 null,
+   constraint PK_REZEPT primary key (R_ID)
 );
 
 /*==============================================================*/
 /* Index: REZEPT_PK                                             */
 /*==============================================================*/
 create unique index REZEPT_PK on Rezept (
-ID
+R_ID
 );
 
 /*==============================================================*/
 /* Table: RezeptStep                                            */
 /*==============================================================*/
 create table RezeptStep (
-   Rez_ID               bigint               not null,
-   ID                   integer              not null,
-   Beschreibung         varchar(254),
-   constraint PK_REZEPTSTEP primary key (Rez_ID, ID)
+   R_ID                 INT8                 not null,
+   RS_ID                INT4                 not null,
+   Beschreibung         VARCHAR(510)         null,
+   constraint PK_REZEPTSTEP primary key (R_ID, RS_ID)
 );
 
 /*==============================================================*/
 /* Index: REZEPTSTEP_PK                                         */
 /*==============================================================*/
 create unique index REZEPTSTEP_PK on RezeptStep (
-Rez_ID,
-ID
+R_ID,
+RS_ID
 );
 
 /*==============================================================*/
 /* Index: REZEPT_REZEPTSTEP_FK                                  */
 /*==============================================================*/
 create  index REZEPT_REZEPTSTEP_FK on RezeptStep (
-Rez_ID
-);
-
-/*==============================================================*/
-/* Table: RezeptStep_Zutat                                      */
-/*==============================================================*/
-create table RezeptStep_Zutat (
-   Rez_Rez_ID           bigint               not null,
-   Rez_ID               integer              not null,
-   ID                   bigint               not null,
-   constraint PK_REZEPTSTEP_ZUTAT primary key (Rez_Rez_ID, Rez_ID, ID)
-);
-
-/*==============================================================*/
-/* Index: REZEPTSTEP_ZUTAT_PK                                   */
-/*==============================================================*/
-create unique index REZEPTSTEP_ZUTAT_PK on RezeptStep_Zutat (
-Rez_Rez_ID,
-Rez_ID,
-ID
-);
-
-/*==============================================================*/
-/* Index: REZEPTSTEP_ZUTAT_FK                                   */
-/*==============================================================*/
-create  index REZEPTSTEP_ZUTAT_FK on RezeptStep_Zutat (
-Rez_Rez_ID,
-Rez_ID
-);
-
-/*==============================================================*/
-/* Index: REZEPTSTEP_ZUTAT_FK2                                  */
-/*==============================================================*/
-create  index REZEPTSTEP_ZUTAT_FK2 on RezeptStep_Zutat (
-ID
-);
-
-/*==============================================================*/
-/* Table: Rezept_Zutat                                          */
-/*==============================================================*/
-create table Rezept_Zutat (
-   ID                   bigint               not null,
-   Zut_ID               bigint               not null,
-   constraint PK_REZEPT_ZUTAT primary key (ID, Zut_ID)
-);
-
-/*==============================================================*/
-/* Index: REZEPT_ZUTAT_PK                                       */
-/*==============================================================*/
-create unique index REZEPT_ZUTAT_PK on Rezept_Zutat (
-ID,
-Zut_ID
-);
-
-/*==============================================================*/
-/* Index: REZEPT_ZUTAT_FK                                       */
-/*==============================================================*/
-create  index REZEPT_ZUTAT_FK on Rezept_Zutat (
-ID
-);
-
-/*==============================================================*/
-/* Index: REZEPT_ZUTAT_FK2                                      */
-/*==============================================================*/
-create  index REZEPT_ZUTAT_FK2 on Rezept_Zutat (
-Zut_ID
+R_ID
 );
 
 /*==============================================================*/
 /* Table: Zutat                                                 */
 /*==============================================================*/
 create table Zutat (
-   ID                   bigint               not null,
-   Name                 varchar(254),
-   Beschreibung         varchar(254),
-   Bild                 varchar(254),
-   constraint PK_ZUTAT primary key (ID)
+   I_ID                 INT8                 not null,
+   B_ID                 INT8                 null,
+   Name                 VARCHAR(254)         null,
+   Beschreibung         VARCHAR(254)         null,
+   constraint PK_ZUTAT primary key (I_ID)
 );
 
 /*==============================================================*/
 /* Index: ZUTAT_PK                                              */
 /*==============================================================*/
 create unique index ZUTAT_PK on Zutat (
-ID
+I_ID
 );
+
+alter table Ingredient_Amount
+   add constraint FK_INGREDIE_INGREDIEN_ZUTAT foreign key (I_ID)
+      references Zutat (I_ID)
+      on delete restrict on update restrict;
+
+alter table Ingredient_Amount
+   add constraint FK_INGREDIE_REZEPT_IN_REZEPT foreign key (R_ID)
+      references Rezept (R_ID)
+      on delete restrict on update restrict;
 
 alter table Kategorie_Rezept
    add constraint FK_KATEGORI_KATEGORIE_KATEGORI foreign key (Name)
@@ -225,32 +207,22 @@ alter table Kategorie_Rezept
       on delete restrict on update restrict;
 
 alter table Kategorie_Rezept
-   add constraint FK_KATEGORI_KATEGORIE_REZEPT foreign key (ID)
-      references Rezept (ID)
+   add constraint FK_KATEGORI_KATEGORIE_REZEPT foreign key (R_ID)
+      references Rezept (R_ID)
+      on delete restrict on update restrict;
+
+alter table Rezept
+   add constraint FK_REZEPT_REFERENCE_BILD foreign key (B_ID)
+      references Bild (B_ID)
       on delete restrict on update restrict;
 
 alter table RezeptStep
-   add constraint FK_REZEPTST_REZEPT_RE_REZEPT foreign key (Rez_ID)
-      references Rezept (ID)
+   add constraint FK_REZEPTST_REZEPT_RE_REZEPT foreign key (R_ID)
+      references Rezept (R_ID)
       on delete restrict on update restrict;
 
-alter table RezeptStep_Zutat
-   add constraint FK_REZEPTST_REZEPTSTE_REZEPTST foreign key (Rez_Rez_ID, Rez_ID)
-      references RezeptStep (Rez_ID, ID)
-      on delete restrict on update restrict;
-
-alter table RezeptStep_Zutat
-   add constraint FK_REZEPTST_REZEPTSTE_ZUTAT foreign key (ID)
-      references Zutat (ID)
-      on delete restrict on update restrict;
-
-alter table Rezept_Zutat
-   add constraint FK_REZEPT_Z_REZEPT_ZU_REZEPT foreign key (ID)
-      references Rezept (ID)
-      on delete restrict on update restrict;
-
-alter table Rezept_Zutat
-   add constraint FK_REZEPT_Z_REZEPT_ZU_ZUTAT foreign key (Zut_ID)
-      references Zutat (ID)
+alter table Zutat
+   add constraint FK_ZUTAT_REFERENCE_BILD foreign key (B_ID)
+      references Bild (B_ID)
       on delete restrict on update restrict;
 

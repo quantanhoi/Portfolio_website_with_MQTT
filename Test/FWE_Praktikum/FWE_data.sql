@@ -1,51 +1,209 @@
-INSERT INTO Kategorie (Name) VALUES ('Vegetarian');
-INSERT INTO Kategorie (Name) VALUES ('Italian');
-INSERT INTO Kategorie (Name) VALUES ('Mexican');
-INSERT INTO Kategorie (Name) VALUES ('Vietnamese');
-INSERT INTO Kategorie (Name) VALUES ('Non-Vegans');
-INSERT INTO Kategorie (Name) VALUES ('Vegan');
+/*==============================================================*/
+/* Pumpkin Spice Latte                                          */
+/*==============================================================*/
+INSERT INTO
+    Bild (URI, Beschreibung, B_ID)
+VALUES
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174280644134711346/pumkin-spice-latte.png?ex=65670512&is=65549012&hm=6ed70747e4f36f5b8280fbf9c3d5e36c45a81b76a96eafcf8678cba108a94194&', 'Image for Pumpkin Spice Latte', 1),
+
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174280644797403166/Homemade-Pumpkin-Puree-7927.png?ex=65670512&is=65549012&hm=7e040a7d26772f3d1ecf4db0171461a312ebec09688b6edfd37499260d29478b&', 'Image for Pumpkin Puree', 2),
+
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174280645422370817/l-intro-1645231221.png?ex=65670512&is=65549012&hm=5a7151a51123fa72f0e63b70c0c3b1da424f4a8fd5d9652ec75777956d6d413a&', 'Image for Coffee', 3),
+
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174280645996982282/GettyImages-1413944242-79c406e0bbe4435596bc671f95a949cb.png?ex=65670513&is=65549013&hm=e3a3084018b545c81f121d8c60af9cc6f2d9827ee9d23795ac03b6aad8e0dce3&', 'Image for Milk', 4),
+
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174280646370283560/hero-image-1-800x533.png?ex=65670513&is=65549013&hm=b9fc68f094ffbd35cadf591e1834b9cfd35079dcf720bb50ca13c9eb60eb34ae&', 'Image for Fall Spices', 5);
+
+/*==============================================================*/
+/* Inserting data into Zutat table                              */
+/*==============================================================*/
+INSERT INTO
+    Zutat (I_ID, B_ID, Name, Beschreibung)
+VALUES
+    (1, 2, 'Pumpkin Puree', 'Puree made from fresh pumpkins'),
+    (2, 3, 'Coffee', 'Freshly brewed coffee'),
+    (3, 4, 'Milk', 'Any kind of milk'),
+    (4, 5, 'Fall Spices', 'Cinnamon, Nutmeg, Ginger, and Cloves');
+
+/*==============================================================*/
+/* Inserting data into Rezept table                             */
+/*==============================================================*/
+INSERT INTO
+    Rezept (Name, Beschreibung, Rating, R_ID, B_ID)
+VALUES
+    (
+        'Pumpkin Spice Latte',
+        'A delicious homemade pumpkin spice latte',
+        5,
+        1,
+        1
+    );
+
+/*==============================================================*/
+/* Inserting data into Ingredient_Amount table                  */
+/*==============================================================*/
+INSERT INTO
+    Ingredient_Amount (R_ID, I_ID, amount, unit)
+VALUES
+    (1, 1, 2, 'tablespoons'),
+    (1, 2, 1, 'cup'),
+    (1, 3, 2, 'cups'),
+    (1, 4, 1, 'teaspoon');
+
+/*==============================================================*/
+/* Inserting data into Kategorie table                          */
+/*==============================================================*/
+INSERT INTO
+    Kategorie (Name)
+VALUES
+    ('Beverages');
 
 
+/*==============================================================*/
+/* Inserting data into Kategorie_Rezept table                   */
+/*==============================================================*/
+INSERT INTO
+    Kategorie_Rezept (Name, R_ID)
+VALUES
+    ('Beverages', 1);
 
-INSERT INTO Zutat (ID, Name, Beschreibung, Bild) VALUES  (1, 'Tomato', 'A type of vegetables', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168693574452400148/tomato.jpeg?ex=6552b1b5&is=65403cb5&hm=1d126a150e467cdd61dfd19f8cd5b08c7ac7dc5e5390d73fa3a5c3500ae96b20&');
-INSERT INTO Zutat (ID, Name, Beschreibung, Bild) VALUES  (2, 'Pasta', 'A type of noodle', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168693574905364510/pasta.jpeg?ex=6552b1b5&is=65403cb5&hm=ce9cd1bf358ec247d41e79e0b1bad8745e1b8a6a1b95f97ee35acd6ee4c0b7f5&');
-INSERT INTO Zutat (ID, Name, Beschreibung, Bild) VALUES  (3, 'Tofu', 'A product made of soja', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168693575240925274/tofu.jpg?ex=6552b1b5&is=65403cb5&hm=71ca4989ae9e9e4ceb4c5ba2bc708c4f78db3d63fb1804cf3f4a5dc83317da59&');
-INSERT INTO Zutat (ID, Name, Beschreibung, Bild) VALUES  (4, 'Taco Shell', 'A type of bread?', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168693575865860116/taco-shell.jpeg?ex=6552b1b5&is=65403cb5&hm=653eb1af6b3c6f8d617465d5f5762175ae676c077ffb24246e128629812a9696&');
-INSERT INTO Zutat (ID, Name, Beschreibung, Bild) VALUES 
-(5, 'Shrimp', 'A type of seafood', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168685887274631298/tom-cang-xanh-la-tom-gi-tom-cang-xanh-gia-bao-nhieu-cach-so-tipsnote-800x450.png?ex=6552aa8c&is=6540358c&hm=d0298caf0b51633d44ce0d8e207644bd50f644d0ca006a4638959bfd46550f22&'),
-(6, 'Bacon', 'A type of meat', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168686787552608266/bacon.jpg?ex=6552ab63&is=65403663&hm=600d75696a0794a9d8a68c74207056f279298231ebca80e97ab75229403d5413&'),
-(7, 'Chicken', 'A type of meat', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168687556439846932/chicken.jpeg?ex=6552ac1a&is=6540371a&hm=b1bee5c9170aea5284b57ab635068a9ee380fad53e0dcbbb7515e193d0d63160&'),
-(8, 'Noodle', 'A type of noodle', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168687583254040687/noodle.jpeg?ex=6552ac21&is=65403721&hm=e2b2d20e07596c4970aa3e9bd8bf8b675c72cac0297f263e4a70c65c303422a5&'),
-(9, 'Salad', 'A type of vegetable', 'https://cdn.discordapp.com/attachments/1168685873903177840/1168687618016432138/salad.jpeg?ex=6552ac29&is=65403729&hm=ee4f1a51f93e6d9342b9a332fdad2860211b025df37fb94d0c76422c3b034338&');
+/*==============================================================*/
+/* Inserting data into RezeptStep table                         */
+/*==============================================================*/
+INSERT INTO
+    RezeptStep (R_ID, RS_ID, Beschreibung)
+VALUES
+    (1, 1, 'Brew the coffee'),
+    (1, 2, 'Heat the milk and pumpkin puree'),
+    (1, 3, 'Mix the coffee, milk, pumpkin puree, and spices together'),
+    (1, 4, 'Serve with whipped cream on top');
+
+/*==============================================================*/
+/* Matcha                                                       */
+/*==============================================================*/
+INSERT INTO
+    Bild (URI, Beschreibung, B_ID)
+VALUES
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174282862766338148/matcha_latte_1_0.png?ex=65670723&is=65549223&hm=97562bd58b5e90d9145f49a32c23838b806b84dfeaa650183864d8bd2a23e4de&', 'Image for Matcha Latte', 6),
+
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174282863391293450/JapaneseMatchaGreenTea6.png?ex=65670723&is=65549223&hm=9e856a9b789921b1373cabd60056b3136e7cab619ce72a72e025630adc2d8c51&', 'Image for Matcha Powder', 7),
+
+('https://cdn.discordapp.com/attachments/1168685873903177840/1174282863970111498/ImageForNews_753423_16891547829825380.png?ex=65670723&is=65549223&hm=51cdfbe7599f44d5267fde2ef2d1ed0cc730336b7d95ed70450a808830d433e1&', 'Image for Matcha Sweetener', 8);
+
+/*==============================================================*/
+/* Inserting data into Zutat table                              */
+/*==============================================================*/
+INSERT INTO
+    Zutat (I_ID, B_ID, Name, Beschreibung)
+VALUES
+    (
+        5,
+        7,
+        'Matcha Powder',
+        'Powdered green tea leaves'
+    ),
+    (
+        6,
+        8,
+        'Sweetener',
+        'Sugar, honey, or any sweetener of choice'
+    );
+
+/*==============================================================*/
+/* Inserting data into Rezept table                             */
+/*==============================================================*/
+INSERT INTO
+    Rezept (Name, Beschreibung, Rating, R_ID, B_ID)
+VALUES
+    (
+        'Matcha Latte',
+        'A delicious and refreshing homemade matcha latte',
+        5,
+        2,
+        6
+    );
+
+/*==============================================================*/
+/* Inserting data into Ingredient_Amount table                  */
+/*==============================================================*/
+INSERT INTO
+    Ingredient_Amount (R_ID, I_ID, amount, unit)
+VALUES
+    (2, 5, 1, 'tablespoon'),
+    (2, 3, 1, 'cup'),
+    (2, 6, 1, 'tablespoon');
 
 
+/*==============================================================*/
+/* Inserting data into Kategorie_Rezept table                   */
+/*==============================================================*/
+INSERT INTO
+    Kategorie_Rezept (Name, R_ID)
+VALUES
+    ('Beverages', 2);
 
-INSERT INTO Rezept (ID, Name, Beschreibung, Rating, Bilder) VALUES 
-(1, 'Pasta Pomodoro', 'Delicious Italian pasta with tomato sauce', 0, 'https://cdn.discordapp.com/attachments/1168685873903177840/1168694548168441916/spaghetti-al-pomodoro.jpg?ex=6552b29d&is=65403d9d&hm=e9b43621444e0e787513a7e0e1387103ea13dc3d3a36c3f7b4f1ce223fa5d90b&');
-INSERT INTO Rezept (ID, Name, Beschreibung, Rating, Bilder) VALUES 
-(2, 'Tofu Tacos', 'Mexican-style tacos with tofu', 0, 'https://cdn.discordapp.com/attachments/1168685873903177840/1168694547623198740/TofuTaco.webp?ex=6552b29d&is=65403d9d&hm=c55e3bc62b71676092b4370579170ff336aca02b1d9f3d41cc687e2bd22dee1e&');
+/*==============================================================*/
+/* Inserting data into RezeptStep table                         */
+/*==============================================================*/
+INSERT INTO
+    RezeptStep (R_ID, RS_ID, Beschreibung)
+VALUES
+    (2, 1, 'Add matcha powder to a cup'),
+    (2, 2, 'Heat the milk and froth it until it gets steamy and frothy'),
+    (2, 3, 'Pour the frothed milk into the cup with matcha powder'),
+    (2, 4, 'Add sweetener to taste and stir well');
 
+/* Inserting data into Bild table */
+INSERT INTO
+    Bild (URI, Beschreibung, B_ID)
+VALUES
+    ('https://cdn.discordapp.com/attachments/1168685873903177840/1174294269603872828/75581339.png?ex=656711c3&is=65549cc3&hm=3e62f89ffed789b0a34511e3a8a6bc4f414400695ccf9eb4668cee674514bdf8&', 'Image for Chicken Fried Rice', 9),
+    ('https://cdn.discordapp.com/attachments/1168685873903177840/1174292658554949713/Diced-Sliced-Cubed-Chicken-for-Recipes-featured-1.png?ex=65671043&is=65549b43&hm=7d0793f302c9d814fb51b0a9b005afa6d568cd1a1f27594b6e43bd4450036619&', 'Image for Chicken', 10),
+    ('https://cdn.discordapp.com/attachments/1168685873903177840/1174283807285854258/Perfect-White-Rice-Recipe-Redo-17-2.png?ex=65670804&is=65549304&hm=3ee50969c96882c5d0c0e788abb353d29d7e9d00a08a8e93a2a04b80642d3f18&', 'Image for Rice', 11),
+    ('https://cdn.discordapp.com/attachments/1168685873903177840/1174283807726243862/eggs-182316-1.png?ex=65670804&is=65549304&hm=aff2ce8fce14403ef68112a94e4a0cafa036c15a0298e0a561b1fb5d992a0274&', 'Image for Egg', 12);
 
-INSERT INTO Kategorie_Rezept (Name, ID) VALUES ('Vegetarian', 1);
-INSERT INTO Kategorie_Rezept (Name, ID) VALUES ('Italian', 1);
-INSERT INTO Kategorie_Rezept (Name, ID) VALUES ('Vegan', 2);
-INSERT INTO Kategorie_Rezept (Name, ID) VALUES ('Mexican', 2);
+/* Inserting data into Zutat table */
+INSERT INTO
+    Zutat (I_ID, B_ID, Name, Beschreibung)
+VALUES
+    (8, 10, 'Chicken', 'Diced cooked chicken'),
+    (9, 11, 'Rice', 'Cooked rice'),
+    (10, 12, 'Eggs', 'Beaten eggs');
 
+/* Inserting data into Rezept table */
+INSERT INTO
+    Rezept (Name, Beschreibung, Rating, R_ID, B_ID)
+VALUES
+    (
+        'Chicken Fried Rice',
+        'A classic fried rice dish with chicken',
+        5,
+        3,
+        9
+    );
 
-INSERT INTO RezeptStep (Rez_ID, ID, Beschreibung) VALUES (1, 1, 'Boil Pasta');
-INSERT INTO RezeptStep (Rez_ID, ID, Beschreibung) VALUES (1, 2, 'Add tomato sauce');
-INSERT INTO RezeptStep (Rez_ID, ID, Beschreibung) VALUES (2, 1, 'Fry Tofu');
-INSERT INTO RezeptStep (Rez_ID, ID, Beschreibung) VALUES (2, 2, 'Put tofu in taco shell');
+/* Inserting data into Ingredient_Amount table */
+INSERT INTO
+    Ingredient_Amount (R_ID, I_ID, amount, unit)
+VALUES
+    (3, 8, 1, 'cup'),
+    (3, 9, 2, 'cups'),
+    (3, 10, 2, 'eggs');
 
+INSERT INTO
+    Kategorie (NAME)
+VALUES
+    ('Rice');
 
-INSERT INTO RezeptStep_Zutat (Rez_Rez_ID, Rez_ID, ID) VALUES (1, 1, 1);
-INSERT INTO RezeptStep_Zutat (Rez_Rez_ID, Rez_ID, ID) VALUES (1, 1, 2);
-INSERT INTO RezeptStep_Zutat (Rez_Rez_ID, Rez_ID, ID) VALUES (2, 1, 3);
-INSERT INTO RezeptStep_Zutat (Rez_Rez_ID, Rez_ID, ID) VALUES (2, 1, 4);
+INSERT INTO
+    Kategorie_Rezept (Name, R_ID)
+VALUES
+    ('Rice', 3);
 
-
-
-INSERT INTO Rezept_Zutat (ID, Zut_ID) VALUES (1, 1);
-INSERT INTO Rezept_Zutat (ID, Zut_ID) VALUES (1, 2);
-INSERT INTO Rezept_Zutat (ID, Zut_ID) VALUES (2, 3);
-INSERT INTO Rezept_Zutat (ID, Zut_ID) VALUES (2, 4);
+/* Inserting data into RezeptStep table */
+INSERT INTO
+    RezeptStep (R_ID, RS_ID, Beschreibung)
+VALUES
+    (3, 1, 'Stir fry chicken until no longer pink'),
+    (3, 2, 'Push chicken to side of pan and add beaten eggs'),
+    (3, 3, 'Add rice and mix everything together until heated through');

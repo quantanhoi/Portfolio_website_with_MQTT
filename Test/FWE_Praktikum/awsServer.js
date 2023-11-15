@@ -5,16 +5,16 @@ const {Client} = pkg;
 const app = express();
 const port = 3000;
 
-const client = new Client({
-    host: 'localhost',
-    port: 5432,
-    database: 'postgres',
-    user: 'postgres',
-    password: '1234'
-});
 
-app.get('/', (req, res) => {
-    res.send('Hello, world');
+class Entity {
+    constructor(id, name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+app.get('/test', (req, res) => {
+    let e = new Entity(1, 'test');
+    res.send(e);
 })
 
 app.listen(port, () => {
