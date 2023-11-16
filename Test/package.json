@@ -4,7 +4,8 @@
   "description": "server test for portfolio website",
   "main": "config.js",
   "scripts": {
-    "test": "node config.js"
+    "test": "node config.js",
+    "start": "node server.js"
   },
   "keywords": [
     "portfolio"
@@ -18,5 +19,6 @@
     "grpc-web": "^1.4.2",
     "pg": "^8.11.3",
     "protobufjs": "^7.2.5"
-  }
+  },
+  "devDependencies": {}
 }
