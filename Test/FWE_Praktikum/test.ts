@@ -106,6 +106,11 @@ app.get('/api/zutat',async (req, res) => {
 
 
 
+//TODO: Rezept nach name durchsuchen, getting all rezept with name of zutat
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
