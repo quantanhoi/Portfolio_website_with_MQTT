@@ -20,7 +20,7 @@ export class Rezept {
     Rating!: number;
 
     @OneToOne(() => Bild)
-    B_ID!: number;
+    B_ID!: Bild;
 
     // @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.rezept)
     // ingredientAmounts = new Collection<Ingredient_Amount>(this);

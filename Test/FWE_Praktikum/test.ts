@@ -9,27 +9,75 @@ import { Zutat } from './entities/zutat';
 import { KategorieRezept } from './entities/kategorie_rezept';
 
 
-const main = async () => {
+import express from 'express';
+
+const app = express();
+const port = 3000;
+
+// const main = async () => {
+//     const orm = await MikroORM.init(mikroOrmConfig);
+//     try {
+//         const em = orm.em.fork();
+//         const entitiesRepository = em.getRepository(Rezept);
+//         const bildRepository = em.getRepository(Bild);
+//         const allEntities = await entitiesRepository.findAll();
+
+//         for (const element of allEntities) {
+
+//             await element.zutaten.init(); // populate the rezepte collection
+//             const bild = await bildRepository.findOne({ B_ID: element.B_ID.B_ID })
+//             console.log(element);
+//             console.log(bild);
+
+//         }
+//     } catch (error) {
+//         console.error(error);
+//     } finally {
+//         await orm.close(true);
+//     }
+// };
+
+// main().catch(console.error);
+
+app.get('/', (req, res) => {
+    res.send('Hello, world!');
+});
+
+
+app.get('/rezept', async (req, res) => {
     const orm = await MikroORM.init(mikroOrmConfig);
     try {
         const em = orm.em.fork();
-        const entitiesRepository = em.getRepository(Zutat);
+        const rezeptRepository = em.getRepository(Rezept);
         const bildRepository = em.getRepository(Bild);
-        const allEntities = await entitiesRepository.findAll();
-
-        for (const element of allEntities) {
-            
-            await element.rezepte.init(); // populate the rezepte collection
-            const bild = await bildRepository.findOne({B_ID: element.B_ID})
-            console.log(element);
-            
+        const allRezepte = await rezeptRepository.findAll();
+        const response = [];
+        for(const element of allRezepte) {
+            await element.zutaten.init();
+            await element.kategorien.init();
+            const bild = await bildRepository.findOne({ B_ID: element.B_ID.B_ID });
+            /* Since in Rezept there's only B_ID with the type is Bild
+            *   We can't just assign URI in bild to B_ID due to difference in type
+            *   therefore here instead of writing class Rezept to response
+            *   I create a new reponse with custom Rezept which has B_ID replaced with URI
+            */  
+            if (bild) {
+                const rezeptWithURI = {...element, B_ID: bild.URI}; // replace B_ID with URI
+                response.push(rezeptWithURI);
+            }
         }
+        res.json(response);
     } catch (error) {
         console.error(error);
+        res.status(500).send('An error occurred while fetching Rezepte.');
     } finally {
         await orm.close(true);
     }
-};
+});
 
-main().catch(console.error);
 
+
+
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});

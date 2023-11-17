@@ -15,7 +15,7 @@ export class Zutat {
     Beschreibung!: string;
 
     @OneToOne(() => Bild)
-    B_ID!: number;
+    B_ID!: Bild;
 
     @ManyToMany({entity: () => Rezept, mappedBy : r => r.zutaten})
     rezepte = new Collection<Rezept>(this);
