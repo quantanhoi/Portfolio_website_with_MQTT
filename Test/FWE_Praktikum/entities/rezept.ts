@@ -4,6 +4,7 @@ import { Ingredient_Amount } from './ingredient_amount'
 import { RezeptStep } from './rezeptstep';
 import { KategorieRezept } from './kategorie_rezept';
 import { Kategorie } from './kategorie';
+import { Zutat } from './zutat';
 @Entity({tableName : 'Rezept'})
 export class Rezept {
     @PrimaryKey()
@@ -19,13 +20,16 @@ export class Rezept {
     Rating!: number;
 
     @OneToOne(() => Bild)
-    B_ID!: Bild;
+    B_ID!: number;
 
-    @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.rezept)
-    ingredientAmounts = new Collection<Ingredient_Amount>(this);
+    // @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.rezept)
+    // ingredientAmounts = new Collection<Ingredient_Amount>(this);
 
     @OneToMany(() => RezeptStep, rezeptStep => rezeptStep.rezept)
     rezeptSteps = new Collection<RezeptStep>(this);
+
+    @ManyToMany({entity: () => Zutat, pivotEntity: () => Ingredient_Amount})
+    zutaten = new Collection<Zutat>(this);
 
     // @OneToMany(() => KategorieRezept, kr => kr.rezept)
     // kategorieRezepte = new Collection<KategorieRezept>(this);

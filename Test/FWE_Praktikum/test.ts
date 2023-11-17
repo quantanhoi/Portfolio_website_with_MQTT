@@ -13,13 +13,15 @@ const main = async () => {
     const orm = await MikroORM.init(mikroOrmConfig);
     try {
         const em = orm.em.fork();
-        const entitiesRepository = em.getRepository(Kategorie);
+        const entitiesRepository = em.getRepository(Zutat);
+        const bildRepository = em.getRepository(Bild);
         const allEntities = await entitiesRepository.findAll();
 
-        for (const kategorie of allEntities) {
+        for (const element of allEntities) {
             
-            await kategorie.rezepte.init(); // populate the rezepte collection
-            console.log(kategorie);
+            await element.rezepte.init(); // populate the rezepte collection
+            const bild = await bildRepository.findOne({B_ID: element.B_ID})
+            console.log(element);
             
         }
     } catch (error) {

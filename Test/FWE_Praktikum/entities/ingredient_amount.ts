@@ -4,21 +4,15 @@ import {Rezept} from './rezept';
 
 @Entity({tableName: 'Ingredient_Amount'})
 export class Ingredient_Amount {
-    @PrimaryKey()
-    R_ID!: number;
-
-    @PrimaryKey()
-    I_ID!: number;
-
-    @Property()
+    @Property({fieldName: 'amount'})
     amount!: number;
 
-    @Property()
+    @Property({fieldName: 'unit'})
     unit!: string;
 
-    @ManyToOne(() => Rezept)
+    @ManyToOne({entity: () => Rezept, primary: true, fieldName: 'R_ID'})
     rezept!: Rezept;
 
-    @ManyToOne(() => Zutat)
+    @ManyToOne({entity: () => Zutat, primary: true, fieldName: 'I_ID'})
     zutat!: Zutat;
 }

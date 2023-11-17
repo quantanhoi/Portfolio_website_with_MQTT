@@ -1,6 +1,7 @@
-import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection, ManyToMany } from '@mikro-orm/core';
 import { Bild } from './bild';
 import { Ingredient_Amount } from './ingredient_amount'
+import { Rezept } from './rezept';
 
 @Entity({tableName : 'Zutat'})
 export class Zutat {
@@ -14,8 +15,8 @@ export class Zutat {
     Beschreibung!: string;
 
     @OneToOne(() => Bild)
-    B_ID!: Bild;
+    B_ID!: number;
 
-    @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.zutat)
-    ingredientAmounts = new Collection<Ingredient_Amount>(this);
+    @ManyToMany({entity: () => Rezept, mappedBy : r => r.zutaten})
+    rezepte = new Collection<Rezept>(this);
 }
