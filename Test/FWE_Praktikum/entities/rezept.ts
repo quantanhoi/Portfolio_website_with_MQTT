@@ -2,8 +2,8 @@ import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection, ManyToMa
 import { Bild } from './bild';
 import { Ingredient_Amount } from './ingredient_amount'
 import { RezeptStep } from './rezeptstep';
+import { KategorieRezept } from './kategorie_rezept';
 import { Kategorie } from './kategorie';
-
 @Entity({tableName : 'Rezept'})
 export class Rezept {
     @PrimaryKey()
@@ -27,6 +27,8 @@ export class Rezept {
     @OneToMany(() => RezeptStep, rezeptStep => rezeptStep.rezept)
     rezeptSteps = new Collection<RezeptStep>(this);
 
-    @ManyToMany(() => Kategorie, kategorie => kategorie.rezepte)
-    kategorien = new Collection<Kategorie>(this);
+    // @OneToMany(() => KategorieRezept, kr => kr.rezept)
+    // kategorieRezepte = new Collection<KategorieRezept>(this);
+    @ManyToMany({entity: () => Kategorie, mappedBy: k => k.rezepte})
+    kategorien = new Collection<Kategorie>(this)
 }

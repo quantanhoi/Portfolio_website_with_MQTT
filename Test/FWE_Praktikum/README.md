@@ -56,3 +56,38 @@ npm install @mikro-orm/cli @mikro-orm/core @mikro-orm/mysql @mikro-orm/nestjs ex
 ```
 
 
+
+
+
+
+
+
+#Error Example
+n MikroORM, collections are lazy-loaded by default, which means they are not loaded until you explicitly ask for them.
+
+To load the rezepte collection for a Kategorie, you can use the init() method on the collection. Here's how you can modify your code to load and print the rezepte collection for each Kategorie:
+```
+const main = async () => {
+    const orm = await MikroORM.init(mikroOrmConfig);
+    try {
+        const em = orm.em.fork();
+        const entitiesRepository = em.getRepository(Kategorie);
+        const allEntities = await entitiesRepository.findAll();
+        for (const kategorie of allEntities) {
+            
+            await kategorie.rezepte.init(); // populate the rezepte collection
+            console.log(kategorie);
+            
+        }
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await orm.close(true);
+    }
+};
+```
+in this code 
+```
+await kategorie.rezepte.init();
+```
+is used tp ;pad tje rezepte collection from the database. After this line, kategorie.rezepte will be initialized and you can use getItems() method to get the items in the collection

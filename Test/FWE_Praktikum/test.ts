@@ -6,6 +6,7 @@ import { Kategorie } from './entities/kategorie';
 import { Rezept } from './entities/rezept';
 import { RezeptStep } from './entities/rezeptstep';
 import { Zutat } from './entities/zutat';
+import { KategorieRezept } from './entities/kategorie_rezept';
 
 
 const main = async () => {
@@ -16,12 +17,10 @@ const main = async () => {
         const allEntities = await entitiesRepository.findAll();
 
         for (const kategorie of allEntities) {
+            
+            await kategorie.rezepte.init(); // populate the rezepte collection
             console.log(kategorie);
-            // await kategorie.rezepte.init(); // populate the rezepte collection
-            // const recipes = kategorie.rezepte;
-            // recipes.getItems().forEach(element => { // use getItems() to get the items in the collection
-            //     console.log(element);
-            // });
+            
         }
     } catch (error) {
         console.error(error);
