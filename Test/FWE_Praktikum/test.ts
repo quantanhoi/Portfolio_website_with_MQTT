@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/rezept', async (req, res) => {
+app.get('/api/rezept', async (req, res) => {
     const orm = await MikroORM.init(mikroOrmConfig);
     try {
         const em = orm.em.fork();
@@ -73,6 +73,35 @@ app.get('/rezept', async (req, res) => {
     } finally {
         await orm.close(true);
     }
+});
+
+app.get('/api/zutat',async (req, res) => {
+    const orm = await MikroORM.init(mikroOrmConfig);
+    try{
+        const em = orm.em.fork();
+        const zutatRepository = em.getRepository(Zutat);
+        const bildRepository = em.getRepository(Bild);
+        const allZutaten = await zutatRepository.findAll();
+        const response = [];
+        for (const element of allZutaten) {
+            await element.rezepte.init();
+            const bild = await bildRepository.findOne({B_ID: element.B_ID.B_ID});
+            if(bild) {
+                const zutatWithURI = {...element, B_ID: bild.URI};
+                response.push(zutatWithURI);
+            }
+        }
+        res.json(response);
+
+    }
+    catch(error) {
+        console.error(error);
+        res.status(500).send('An error occured while fetching Zutaten.');
+    }
+    finally {
+        await orm.close(true);
+    }
+
 });
 
 
