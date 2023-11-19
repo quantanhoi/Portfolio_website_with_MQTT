@@ -53,6 +53,7 @@ app.get('/api/rezept', async (req, res) => {
         const allRezepte = await rezeptRepository.findAll();
         const response = [];
         for(const element of allRezepte) {
+            await element.rezeptSteps.init();
             await element.zutaten.init();
             await element.kategorien.init();
             const bild = await bildRepository.findOne({ B_ID: element.B_ID.B_ID });
@@ -103,11 +104,41 @@ app.get('/api/zutat',async (req, res) => {
     }
 
 });
+app.get('/api/rezept/search', async (req, res) => {
+    const orm = await MikroORM.init(mikroOrmConfig);
+    try {
+        const em = orm.em.fork();
+        const rezeptRepository = em.getRepository(Rezept);
+        const bildRepository = em.getRepository(Bild);
+        const query = req.query.q;
+        if (typeof query !== 'string') {
+            res.status(400).send('Invalid query parameter.');
+            return;
+        }
+        const rezepte = await rezeptRepository.find({ Name: query });
+        const response = [];
+        for(const element of rezepte) {
+            await element.zutaten.init();
+            await element.kategorien.init();
+            await element.rezeptSteps.init();
+            const bild = await bildRepository.findOne({ B_ID: element.B_ID.B_ID });
+            if (bild) {
+                const rezeptWithURI = {...element, B_ID: bild.URI}; // replace B_ID with URI
+                response.push(rezeptWithURI);
+            }
+        }
+        res.json(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching Rezepte.');
+    } finally {
+        await orm.close(true);
+    }
+});
 
 
 
-//TODO: Rezept nach name durchsuchen, getting all rezept with name of zutat
-
+//TODO: Rezept nach name durchsuchen, getting all rezept with name of
 
 
 

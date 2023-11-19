@@ -56,8 +56,23 @@ npm install @mikro-orm/cli @mikro-orm/core @mikro-orm/mysql @mikro-orm/nestjs ex
 ```
 
 
+##Function test 
 
+get all rezept test
+```
+http://localhost:3000/api/rezept
+```
 
+get all zutat
+
+```
+http://localhost:3000/api/zutat
+```
+
+get specific recipe, %20 is for space
+```
+http://localhost:3000/api/rezept/search?q=Matcha%20Latte
+```
 
 
 
@@ -91,3 +106,22 @@ in this code
 await kategorie.rezepte.init();
 ```
 is used tp ;pad tje rezepte collection from the database. After this line, kategorie.rezepte will be initialized and you can use getItems() method to get the items in the collection
+
+
+#composite primary key and composition
+I got a lot of error just for initialize RezeptStep 
+in @ManyToOne to Rezept you have to define it as primary key
+```
+@Entity({tableName: 'RezeptStep'})
+export class RezeptStep {
+    @PrimaryKey()
+    RS_ID!: number;
+
+    @Property()
+    Beschreibung!: string;
+
+    @ManyToOne(() => Rezept, { primary: true, fieldName: 'R_ID' })
+    rezept!: Rezept;
+
+}
+```

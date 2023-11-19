@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection, ManyToMany } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection, ManyToMany, Cascade } from '@mikro-orm/core';
 import { Bild } from './bild';
 import { Ingredient_Amount } from './ingredient_amount'
 import { RezeptStep } from './rezeptstep';
@@ -27,6 +27,7 @@ export class Rezept {
 
     @OneToMany(() => RezeptStep, rezeptStep => rezeptStep.rezept)
     rezeptSteps = new Collection<RezeptStep>(this);
+
 
     @ManyToMany({entity: () => Zutat, pivotEntity: () => Ingredient_Amount})
     zutaten = new Collection<Zutat>(this);

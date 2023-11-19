@@ -5,14 +5,12 @@ import { Rezept } from './rezept';
 @Entity({tableName: 'RezeptStep'})
 export class RezeptStep {
     @PrimaryKey()
-    R_ID!: number;
-
-    @PrimaryKey()
     RS_ID!: number;
 
     @Property()
     Beschreibung!: string;
 
-    @ManyToOne(() => Rezept)
+    @ManyToOne(() => Rezept, { primary: true, fieldName: 'R_ID' })
     rezept!: Rezept;
+
 }
