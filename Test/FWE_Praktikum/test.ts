@@ -14,7 +14,7 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello, world!');
@@ -143,9 +143,60 @@ app.get('/api/zutat/search', async (req, res) => {
     }
 });
 
+app.post('/api/rezept/add', async (req, res) => {
+    // ... initialization code ...
+    res.setHeader('Content-Type', 'application/json');
+    const orm = await MikroORM.init(mikroOrmConfig);
+    const em = orm.em.fork();
+    const data = req.body[0];
+    const newRezept = new Rezept();
+    newRezept.Name = data.Name;
+    newRezept.Beschreibung = data.Beschreibung;
+    newRezept.Rating = data.Rating;
+    for(const step of data.rezeptSteps) {
+        const newStep = new RezeptStep();
+        newStep.Beschreibung = step.Beschreibung;
+        newStep.RS_ID = step.RS_ID;
+        newRezept.rezeptSteps.add(newStep);
+    }
+    for (const ingredientData of req.body.zutaten) {
+        let ingredient = await em.findOne(Zutat, { Name: ingredientData.Name });
+        if (!ingredient) {
+            ingredient = new Zutat();
+            ingredient.Name = ingredientData.Name;
+            ingredient.Beschreibung = ingredientData.Beschreibung;
+            em.persist(ingredient);
+        }
+        newRezept.zutaten.add(ingredient);
+    }
+    for (const categoryData of req.body.kategorien) {
+        let category = await em.findOne(Kategorie, { Name: categoryData.Name });
+        if (!category) {
+            category = new Kategorie();
+            category.Name = categoryData.Name;
+            // Persist new category
+            em.persist(category);
+        }
+        newRezept.kategorien.add(category);
+    }
+    em.persist(newRezept);
+    await em.flush();
+    res.status(201).json({ message: 'Rezept added successfully' });
+
+    // for (const ingredientData of ingredients) {
+    //     let ingredient = await em.findOne(Zutat, { Name: ingredientData.Name });
+    //     if (!ingredient) {
+    //         ingredient = new Zutat();
+    //         // ... set properties from ingredientData ...
+    //         em.persist(ingredient);
+    //     }
+    //     // Add ingredient to the recipe
+    //     //newRezept.zutaten.add(ingredient);
+    // }
+    // ... persist newRezept ...
+});
 
 
-//TODO: Rezept nach name durchsuchen, getting all rezept with name of zutat
 
 
 
