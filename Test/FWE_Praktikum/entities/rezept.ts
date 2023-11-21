@@ -25,15 +25,15 @@ export class Rezept {
     // @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.rezept)
     // ingredientAmounts = new Collection<Ingredient_Amount>(this);
 
-    @OneToMany(() => RezeptStep, rezeptStep => rezeptStep.rezept)
+    @OneToMany(() => RezeptStep, rezeptStep => rezeptStep.rezept, { cascade: [Cascade.ALL] })
     rezeptSteps = new Collection<RezeptStep>(this);
 
 
-    @ManyToMany({entity: () => Zutat, pivotEntity: () => Ingredient_Amount})
+    @ManyToMany({entity: () => Zutat, pivotEntity: () => Ingredient_Amount, cascade: [Cascade.ALL] })
     zutaten = new Collection<Zutat>(this);
 
     // @OneToMany(() => KategorieRezept, kr => kr.rezept)
     // kategorieRezepte = new Collection<KategorieRezept>(this);
-    @ManyToMany({entity: () => Kategorie, mappedBy: k => k.rezepte})
+    @ManyToMany({entity: () => Kategorie, mappedBy: k => k.rezepte, cascade: [Cascade.PERSIST]})
     kategorien = new Collection<Kategorie>(this)
 }
