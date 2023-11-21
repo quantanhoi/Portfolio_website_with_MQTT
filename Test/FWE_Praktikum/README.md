@@ -82,6 +82,11 @@ get specific recipe, %20 is for space
 http://localhost:3000/api/rezept/search?q=Matcha%20Latte
 ```
 
+testing add api with post request
+take the data from testNewZutat.json and put it into body as raw data and json type
+```
+http://localhost:3000/api/zutat/add
+```
 
 
 
