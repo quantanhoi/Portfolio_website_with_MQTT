@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mikro-orm/cli": "^5.9.3",
-    "@mikro-orm/core": "^5.9.3",
-    "@mikro-orm/mysql": "^5.9.3",
+    "@mikro-orm/cli": "^5.9.4",
+    "@mikro-orm/core": "^5.9.4",
+    "@mikro-orm/mysql": "^5.9.4",
     "@mikro-orm/nestjs": "^5.2.2",
     "express": "^4.18.2"
   },

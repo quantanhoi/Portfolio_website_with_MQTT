@@ -7,20 +7,20 @@ import { Kategorie } from './kategorie';
 import { Zutat } from './zutat';
 @Entity({tableName : 'Rezept'})
 export class Rezept {
-    @PrimaryKey()
+    @PrimaryKey({fieldName: 'R_ID'})
     R_ID!: number;
 
-    @Property()
+    @Property({fieldName: 'Name'})
     Name!: string;
 
-    @Property()
-    Beschreibung!: string;
+    @Property({default: 'n/a', fieldName: 'Beschreibung'})
+    Beschreibung?: string;
 
-    @Property()
-    Rating!: number;
+    @Property({default: 0, fieldName: 'Rating'})
+    Rating?: number;
 
-    @OneToOne(() => Bild)
-    B_ID!: Bild;
+    @OneToOne(() => Bild ,{nullable: true, default: 'n/a', fieldName: 'B_ID'})
+    Bild?: Bild;
 
     // @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.rezept)
     // ingredientAmounts = new Collection<Ingredient_Amount>(this);

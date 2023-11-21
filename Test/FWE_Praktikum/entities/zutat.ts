@@ -11,11 +11,11 @@ export class Zutat {
     @Property()
     Name!: string;
 
-    @Property()
-    Beschreibung!: string;
+    @Property({default: 'n/a'})
+    Beschreibung?: string;
 
-    @OneToOne(() => Bild)
-    B_ID!: Bild;
+    @OneToOne(() => Bild, {nullable: true, default: 'n/a', fieldName: 'B_ID'})
+    Bild?: Bild;
 
     @ManyToMany({entity: () => Rezept, mappedBy : r => r.zutaten})
     rezepte = new Collection<Rezept>(this);

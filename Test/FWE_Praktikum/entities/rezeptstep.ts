@@ -4,10 +4,10 @@ import { Rezept } from './rezept';
 
 @Entity({tableName: 'RezeptStep'})
 export class RezeptStep {
-    @PrimaryKey()
+    @PrimaryKey({fieldName: 'RS_ID'})
     RS_ID!: number;
 
-    @Property()
+    @Property({fieldName: 'Beschreibung'})
     Beschreibung!: string;
 
     @ManyToOne(() => Rezept, { primary: true, fieldName: 'R_ID' })

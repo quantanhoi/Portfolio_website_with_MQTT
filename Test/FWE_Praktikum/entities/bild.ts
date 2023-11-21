@@ -3,12 +3,12 @@ import { MySqlDriver } from '@mikro-orm/mysql';
 
 @Entity({tableName: 'Bild'})
 export class Bild {
-    @PrimaryKey()
+    @PrimaryKey({fieldName: 'B_ID'})
     B_ID!: number;
 
-    @Property()
+    @Property({fieldName: 'URI'})
     URI!: string;
 
-    @Property()
+    @Property({fieldName: 'Beschreibung'})
     Beschreibung!: string;
 }

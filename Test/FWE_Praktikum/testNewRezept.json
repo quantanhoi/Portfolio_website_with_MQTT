@@ -27,13 +27,18 @@
                 "Beschreibung": "Any kind of milk"
             },
             {
-                "Name": "Matcha Powder",
+                "Name": "Taro Powder",
                 "Beschreibung": "Powdered green tea leaves"
             },
             {
                 "Name": "Sweetener",
                 "Beschreibung": "Sugar, honey, or any sweetener of choice"
+            },
+            {
+                "Name": "Green Tea",
+                "Beschreibung": "Green Tea Leaves of choice"
             }
+
         ],
         "kategorien": [
             {

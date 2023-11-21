@@ -141,6 +141,11 @@ create table
       primary key (I_ID)
    );
 
+ALTER TABLE Bild MODIFY B_ID bigint NOT NULL AUTO_INCREMENT;
+ALTER TABLE Rezept MODIFY R_ID bigint NOT NULL AUTO_INCREMENT;
+ALTER TABLE RezeptStep MODIFY RS_ID int NOT NULL AUTO_INCREMENT;
+ALTER TABLE Zutat MODIFY I_ID bigint NOT NULL AUTO_INCREMENT;
+
 alter table Ingredient_Amount add constraint FK_INGREDIE_INGREDIEN_ZUTAT foreign key (I_ID) references Zutat (I_ID) on delete restrict on update restrict;
 
 alter table Ingredient_Amount add constraint FK_INGREDIE_REZEPT_IN_REZEPT foreign key (R_ID) references Rezept (R_ID) on delete restrict on update restrict;
@@ -154,3 +159,6 @@ alter table Rezept add constraint FK_REZEPT_REFERENCE_BILD foreign key (B_ID) re
 alter table RezeptStep add constraint FK_REZEPTST_REZEPT_RE_REZEPT foreign key (R_ID) references Rezept (R_ID) on delete restrict on update restrict;
 
 alter table Zutat add constraint FK_ZUTAT_REFERENCE_BILD foreign key (B_ID) references Bild (B_ID) on delete restrict on update restrict;
+
+
+
