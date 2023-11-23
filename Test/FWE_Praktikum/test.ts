@@ -33,14 +33,14 @@ app.get('/api/rezept', async (req, res) => {
             await element.rezeptSteps.init();
             await element.zutaten.init();
             await element.kategorien.init();
-            if(element.Bild) {
+            if (element.Bild) {
                 const bild = await bildRepository.findOne({ B_ID: element.Bild.B_ID });
                 if (bild) {
                     const rezeptWithURI = { ...element, Bild: bild.URI };
                     response.push(rezeptWithURI);
                 }
                 else {
-                    const rezeptWithoutURI = {...element, Bild: 'n/a'}
+                    const rezeptWithoutURI = { ...element, Bild: 'n/a' }
                     response.push(rezeptWithoutURI);
                 }
             }
@@ -69,14 +69,14 @@ app.get('/api/zutat', async (req, res) => {
         const response = [];
         for (const element of allZutaten) {
             await element.rezepte.init();
-            if(element.Bild) {
+            if (element.Bild) {
                 const bild = await bildRepository.findOne({ B_ID: element.Bild.B_ID });
                 if (bild) {
                     const zutatWithURI = { ...element, Bild: bild.URI };
                     response.push(zutatWithURI);
                 }
                 else {
-                    const zutatWithoutURI = {...element, Bild: 'n/a'}
+                    const zutatWithoutURI = { ...element, Bild: 'n/a' }
                     response.push(zutatWithoutURI);
                 }
             }
@@ -110,14 +110,14 @@ app.get('/api/rezept/search', async (req, res) => {
             await element.zutaten.init();
             await element.kategorien.init();
             await element.rezeptSteps.init();
-            if(element.Bild) {
+            if (element.Bild) {
                 const bild = await bildRepository.findOne({ B_ID: element.Bild.B_ID });
                 if (bild) {
                     const rezeptWithURI = { ...element, Bild: bild.URI };
                     response.push(rezeptWithURI);
                 }
                 else {
-                    const rezeptWithoutURI = {...element, Bild: 'n/a'}
+                    const rezeptWithoutURI = { ...element, Bild: 'n/a' }
                     response.push(rezeptWithoutURI);
                 }
             }
@@ -146,14 +146,14 @@ app.get('/api/zutat/search', async (req, res) => {
         const response = [];
         for (const element of zutat) {
             element.rezepte.init();
-            if(element.Bild) {
+            if (element.Bild) {
                 const bild = await bildRepository.findOne({ B_ID: element.Bild.B_ID });
                 if (bild) {
                     const zutatWithURI = { ...element, Bild: bild.URI };
                     response.push(zutatWithURI);
                 }
                 else {
-                    const zutatWithoutURI = {...element, Bild: 'n/a'}
+                    const zutatWithoutURI = { ...element, Bild: 'n/a' }
                     response.push(zutatWithoutURI);
                 }
             }
@@ -186,19 +186,7 @@ app.post('/api/rezept/add', async (req, res) => {
         }
         for (const ingredientData of req.body[0].zutaten) {
             console.log(ingredientData);
-            let ingredient = await addZutat(ingredientData, orm);
-            
-            // let ingredient = await em.findOne(Zutat, { Name: ingredientData.Name });
-            // if (!ingredient) {
-            //     ingredient = new Zutat();
-            //     ingredient.Name = ingredientData.Name;
-            //     ingredient.Beschreibung = ingredientData.Beschreibung;
-            //     em.persist(ingredient);
-            //     console.log("persisted new ingredient" + ingredient.Name);
-            // }
-            // em.flush();
-            // console.log("Persisted new ingredient with ID: " + ingredient.I_ID);
-            newRezept.zutaten.add(ingredient);
+            await newRezept.addZutatWithAmount(ingredientData, orm);
         }
         for (const categoryData of req.body[0].kategorien) {
             let category = await em.findOne(Kategorie, { Name: categoryData.Name });
@@ -209,14 +197,35 @@ app.post('/api/rezept/add', async (req, res) => {
                 em.persist(category);
                 em.flush();
                 let persistedCategory = await em.findOne(Kategorie, { Name: categoryData.Name });
-                if(persistedCategory) {
+                if (persistedCategory) {
                     category = persistedCategory;
                 }
             }
             newRezept.kategorien.add(category);
         }
+        // Persist the Rezept entity with its associations
         em.persist(newRezept);
         await em.flush();
+        // Retrieve persisted Rezept entity
+        const persistedRezept = await em.findOne(Rezept, { Name: newRezept.Name });
+        // Update Ingredient_Amount entries with amount and unit
+        if (persistedRezept) {
+            for (const zutatData of req.body[0].zutaten) {
+                const zutatEntity = await em.findOne(Zutat, { Name: zutatData.Name });
+                if (zutatEntity) {
+                    // Find the corresponding Ingredient_Amount entry
+                    const ingredientAmountEntry = await em.findOne(Ingredient_Amount, { rezept: persistedRezept, zutat: zutatEntity });
+                    if (ingredientAmountEntry) {
+                        // Update amount and unit
+                        ingredientAmountEntry.amount = zutatData.amount;
+                        ingredientAmountEntry.unit = zutatData.unit;
+                        console.log(ingredientAmountEntry);
+                        em.persist(ingredientAmountEntry);
+                    }
+                }
+            }
+            await em.flush();
+        }
         res.status(201).json({ message: 'Rezept added successfully' });
     }
     catch (error) {
@@ -265,6 +274,8 @@ app.post('/api/zutat/add', async (req, res) => {
 interface zutatData {
     Name: string;
     Beschreibung: string;
+    amount: number;
+    unit: string;
 }
 
 async function addZutat(zutatData: zutatData, orm: MikroORM) {
@@ -278,9 +289,9 @@ async function addZutat(zutatData: zutatData, orm: MikroORM) {
         await em.flush();
         console.log("persisted new ingredient " + ingredient.Name);
         let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
-            if (persistedIngredient) {
-                ingredient = persistedIngredient;
-            }
+        if (persistedIngredient) {
+            ingredient = persistedIngredient;
+        }
     }
     return ingredient;
 }

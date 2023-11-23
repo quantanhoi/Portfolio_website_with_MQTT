@@ -1,10 +1,17 @@
-import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection, ManyToMany, Cascade } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, OneToMany, OneToOne, Collection, ManyToMany, Cascade, MikroORM } from '@mikro-orm/core';
 import { Bild } from './bild';
 import { Ingredient_Amount } from './ingredient_amount'
 import { RezeptStep } from './rezeptstep';
 import { KategorieRezept } from './kategorie_rezept';
 import { Kategorie } from './kategorie';
 import { Zutat } from './zutat';
+
+interface zutatData {
+    Name: string;
+    Beschreibung: string;
+    amount: number;
+    unit: string;
+}
 @Entity({tableName : 'Rezept'})
 export class Rezept {
     @PrimaryKey({fieldName: 'R_ID'})
@@ -36,4 +43,24 @@ export class Rezept {
     // kategorieRezepte = new Collection<KategorieRezept>(this);
     @ManyToMany({entity: () => Kategorie, mappedBy: k => k.rezepte, cascade: [Cascade.PERSIST]})
     kategorien = new Collection<Kategorie>(this)
+
+
+    async addZutatWithAmount(zutatData: zutatData, orm: MikroORM) {
+        const em = orm.em.fork();
+        let zutatEntity = await em.findOne(Zutat, { Name: zutatData.Name });
+        if (!zutatEntity) {
+            zutatEntity = new Zutat();
+            zutatEntity.Name = zutatData.Name;
+            zutatEntity.Beschreibung = zutatData.Beschreibung;
+            em.persist(zutatEntity);
+            await em.flush();
+            console.log("persisted new ingredient " + zutatEntity.Name);
+        let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
+            if (persistedIngredient) {
+                zutatEntity = persistedIngredient;
+            }
+        }
+        this.zutaten.add(zutatEntity);
+        // return zutatEntity;
+    }
 }
