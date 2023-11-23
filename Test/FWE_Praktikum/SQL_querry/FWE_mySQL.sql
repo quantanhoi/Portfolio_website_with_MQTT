@@ -25,32 +25,7 @@ drop foreign key FK_ZUTAT_REFERENCE_BILD;
 
 
 
-alter table Ingredient_Amount
-drop foreign key FK_INGREDIE_REZEPT_IN_REZEPT;
 
-alter table Ingredient_Amount
-drop foreign key FK_INGREDIE_INGREDIEN_ZUTAT;
-
-
-
-alter table Kategorie_Rezept
-drop foreign key FK_KATEGORI_KATEGORIE_KATEGORI;
-
-alter table Kategorie_Rezept
-drop foreign key FK_KATEGORI_KATEGORIE_REZEPT;
-
-
-alter table Rezept
-drop foreign key FK_REZEPT_REFERENCE_BILD;
-
-
-alter table RezeptStep
-drop foreign key FK_REZEPTST_REZEPT_RE_REZEPT;
-
-
-
-alter table Zutat
-drop foreign key FK_ZUTAT_REFERENCE_BILD;
 
 
 
