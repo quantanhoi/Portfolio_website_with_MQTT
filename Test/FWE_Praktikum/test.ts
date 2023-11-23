@@ -168,7 +168,6 @@ app.get('/api/zutat/search', async (req, res) => {
 });
 
 app.post('/api/rezept/add', async (req, res) => {
-    // ... initialization code ...
     res.setHeader('Content-Type', 'application/json');
     const orm = await MikroORM.init(mikroOrmConfig);
     try {
@@ -185,26 +184,34 @@ app.post('/api/rezept/add', async (req, res) => {
             newStep.RS_ID = step.RS_ID;
             newRezept.rezeptSteps.add(newStep);
         }
-        for (const ingredientData of req.body.zutaten) {
-            let ingredient = await em.findOne(Zutat, { Name: ingredientData.Name });
-            if (!ingredient) {
-                ingredient = new Zutat();
-                ingredient.Name = ingredientData.Name;
-                ingredient.Beschreibung = ingredientData.Beschreibung;
-                em.persist(ingredient);
-                console.log("persisted new ingredient" + ingredient.Name);
-            }
-            em.flush();
-            console.log("Persisted new ingredient with ID: " + ingredient.I_ID);
+        for (const ingredientData of req.body[0].zutaten) {
+            console.log(ingredientData);
+            let ingredient = await addZutat(ingredientData, orm);
+            
+            // let ingredient = await em.findOne(Zutat, { Name: ingredientData.Name });
+            // if (!ingredient) {
+            //     ingredient = new Zutat();
+            //     ingredient.Name = ingredientData.Name;
+            //     ingredient.Beschreibung = ingredientData.Beschreibung;
+            //     em.persist(ingredient);
+            //     console.log("persisted new ingredient" + ingredient.Name);
+            // }
+            // em.flush();
+            // console.log("Persisted new ingredient with ID: " + ingredient.I_ID);
             newRezept.zutaten.add(ingredient);
         }
-        for (const categoryData of req.body.kategorien) {
+        for (const categoryData of req.body[0].kategorien) {
             let category = await em.findOne(Kategorie, { Name: categoryData.Name });
             if (!category) {
                 category = new Kategorie();
                 category.Name = categoryData.Name;
                 // Persist new category
                 em.persist(category);
+                em.flush();
+                let persistedCategory = await em.findOne(Kategorie, { Name: categoryData.Name });
+                if(persistedCategory) {
+                    category = persistedCategory;
+                }
             }
             newRezept.kategorien.add(category);
         }
@@ -222,27 +229,27 @@ app.post('/api/rezept/add', async (req, res) => {
 });
 
 app.post('/api/zutat/add', async (req, res) => {
-    // ... initialization code ...
     res.setHeader('Content-Type', 'application/json');
     const orm = await MikroORM.init(mikroOrmConfig);
     try {
-        const em = orm.em.fork();
-        const zutatData = req.body[0];
-        let ingredient = await em.findOne(Zutat, { Name: zutatData.Name });
-        if (!ingredient) {
-            ingredient = new Zutat();
-            ingredient.Name = zutatData.Name;
-            ingredient.Beschreibung = zutatData.Beschreibung;
-            em.persist(ingredient);
-            console.log("persisted new ingredient " + ingredient.Name);
-            em.flush();
-            console.log("Persisted new ingredient with ID: " + ingredient.I_ID);
-            let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
-            if (persistedIngredient) {
-                ingredient = persistedIngredient;
-            }
-        }
-        res.status(201).json({ message: 'Zutat added successfully' });
+        // const em = orm.em.fork();
+        // const zutatData = req.body[0];
+        // let ingredient = await em.findOne(Zutat, { Name: zutatData.Name });
+        // if (!ingredient) {
+        //     ingredient = new Zutat();
+        //     ingredient.Name = zutatData.Name;
+        //     ingredient.Beschreibung = zutatData.Beschreibung;
+        //     em.persist(ingredient);
+        //     em.flush();
+        //     console.log("persisted new ingredient " + ingredient.Name);
+        //     let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
+        //     if (persistedIngredient) {
+        //         ingredient = persistedIngredient;
+        //     }
+        // }
+        let ingredient = await addZutat(req.body[0], orm);
+        console.log(ingredient);
+        res.status(201).json({ message: 'Zutat added successfully: ' + ingredient.Name });
     }
     catch (error) {
         console.error(error);
@@ -252,6 +259,31 @@ app.post('/api/zutat/add', async (req, res) => {
         await orm.close(true);
     }
 });
+
+//testing extracted meothods
+
+interface zutatData {
+    Name: string;
+    Beschreibung: string;
+}
+
+async function addZutat(zutatData: zutatData, orm: MikroORM) {
+    const em = orm.em.fork();
+    let ingredient = await em.findOne(Zutat, { Name: zutatData.Name });
+    if (!ingredient) {
+        ingredient = new Zutat();
+        ingredient.Name = zutatData.Name;
+        ingredient.Beschreibung = zutatData.Beschreibung;
+        em.persist(ingredient);
+        await em.flush();
+        console.log("persisted new ingredient " + ingredient.Name);
+        let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
+            if (persistedIngredient) {
+                ingredient = persistedIngredient;
+            }
+    }
+    return ingredient;
+}
 
 
 

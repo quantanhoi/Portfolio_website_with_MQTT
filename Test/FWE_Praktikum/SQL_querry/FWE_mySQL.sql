@@ -143,7 +143,6 @@ create table
 
 ALTER TABLE Bild MODIFY B_ID bigint NOT NULL AUTO_INCREMENT;
 ALTER TABLE Rezept MODIFY R_ID bigint NOT NULL AUTO_INCREMENT;
-ALTER TABLE RezeptStep MODIFY RS_ID int NOT NULL AUTO_INCREMENT;
 ALTER TABLE Zutat MODIFY I_ID bigint NOT NULL AUTO_INCREMENT;
 
 alter table Ingredient_Amount add constraint FK_INGREDIE_INGREDIEN_ZUTAT foreign key (I_ID) references Zutat (I_ID) on delete restrict on update restrict;
