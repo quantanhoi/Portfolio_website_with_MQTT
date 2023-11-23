@@ -24,15 +24,21 @@
         "zutaten": [
             {
                 "Name": "Milk",
-                "Beschreibung": "Any kind of milk"
+                "Beschreibung": "Any kind of milk",
+                "amount": "300",
+                "unit": "ml"
             },
             {
                 "Name": "Taro Powder",
-                "Beschreibung": "Taro Powder"
+                "Beschreibung": "Taro Powder",
+                "amount": "10",
+                "unit": "g"
             },
             {
                 "Name": "Sweetener",
-                "Beschreibung": "Sugar, honey, or any sweetener of choice"
+                "Beschreibung": "Sugar, honey, or any sweetener of choice",
+                "amount": "10",
+                "unit": "g"
             }
         ],
         "kategorien": [
