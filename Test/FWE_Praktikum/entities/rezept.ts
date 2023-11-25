@@ -5,28 +5,24 @@ import { RezeptStep } from './rezeptstep';
 import { KategorieRezept } from './kategorie_rezept';
 import { Kategorie } from './kategorie';
 import { Zutat } from './zutat';
+import { zutatData } from './zutatData';
 
-interface zutatData {
-    Name: string;
-    Beschreibung: string;
-    amount: number;
-    unit: string;
-}
-@Entity({tableName : 'Rezept'})
+
+@Entity({ tableName: 'Rezept' })
 export class Rezept {
-    @PrimaryKey({fieldName: 'R_ID'})
+    @PrimaryKey({ fieldName: 'R_ID' })
     R_ID!: number;
 
-    @Property({fieldName: 'Name'})
+    @Property({ fieldName: 'Name' })
     Name!: string;
 
-    @Property({default: 'n/a', fieldName: 'Beschreibung'})
+    @Property({ default: 'n/a', fieldName: 'Beschreibung' })
     Beschreibung?: string;
 
-    @Property({default: 0, fieldName: 'Rating'})
+    @Property({ default: 0, fieldName: 'Rating' })
     Rating?: number;
 
-    @OneToOne(() => Bild ,{nullable: true, default: 'n/a', fieldName: 'B_ID'})
+    @OneToOne(() => Bild, { nullable: true, default: 'n/a', fieldName: 'B_ID' })
     Bild?: Bild;
 
     // @OneToMany(() => Ingredient_Amount, ingredientAmount => ingredientAmount.rezept)
@@ -36,31 +32,45 @@ export class Rezept {
     rezeptSteps = new Collection<RezeptStep>(this);
 
 
-    @ManyToMany({entity: () => Zutat, pivotEntity: () => Ingredient_Amount, cascade: [Cascade.ALL] })
+    @ManyToMany({ entity: () => Zutat, pivotEntity: () => Ingredient_Amount, cascade: [Cascade.ALL] })
     zutaten = new Collection<Zutat>(this);
 
     // @OneToMany(() => KategorieRezept, kr => kr.rezept)
     // kategorieRezepte = new Collection<KategorieRezept>(this);
-    @ManyToMany({entity: () => Kategorie, mappedBy: k => k.rezepte, cascade: [Cascade.PERSIST]})
+    @ManyToMany({ entity: () => Kategorie, mappedBy: k => k.rezepte, cascade: [Cascade.PERSIST] })
     kategorien = new Collection<Kategorie>(this)
 
-
-    async addZutatWithAmount(zutatData: zutatData, orm: MikroORM) {
-        const em = orm.em.fork();
-        let zutatEntity = await em.findOne(Zutat, { Name: zutatData.Name });
-        if (!zutatEntity) {
-            zutatEntity = new Zutat();
-            zutatEntity.Name = zutatData.Name;
-            zutatEntity.Beschreibung = zutatData.Beschreibung;
-            em.persist(zutatEntity);
-            await em.flush();
-            console.log("persisted new ingredient " + zutatEntity.Name);
-        let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
-            if (persistedIngredient) {
-                zutatEntity = persistedIngredient;
+    /**
+     * @brief add a new ingredient to the recipe, 
+     * add the ingredient to the database if not exists
+     * ONLY USE WITH INSTANCE OF RECIPE GETTING FROM DATABASE
+     * @param zutatData data of Ingredient + amount and unit
+     * @param orm mikroorm
+     * 
+     */
+    async addZutatToNewRecipe(zutatData: zutatData, orm: MikroORM) {
+        try {
+            const em = orm.em.fork();
+            let zutatEntity = await em.findOne(Zutat, { Name: zutatData.Name });
+            if (!zutatEntity) {
+                console.log("No zutat entity");
+                zutatEntity = new Zutat();
+                zutatEntity.Name = zutatData.Name;
+                zutatEntity.Beschreibung = zutatData.Beschreibung;
+                em.persist(zutatEntity);
+                await em.flush();
+                console.log("persisted new ingredient " + zutatEntity.Name);
+                let persistedIngredient = await em.findOne(Zutat, { Name: zutatData.Name });
+                if (persistedIngredient) {
+                    zutatEntity = persistedIngredient;
+                }
+                this.zutaten.add(zutatEntity);
+                return true;
             }
+            this.zutaten.add(zutatEntity);
         }
-        this.zutaten.add(zutatEntity);
-        // return zutatEntity;
+        catch (e) {
+            console.log(e);
+        }
     }
 }
