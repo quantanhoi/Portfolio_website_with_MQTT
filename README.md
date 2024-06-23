@@ -8,20 +8,20 @@
 
 Set up Postgresql database on a home server using ```query.sql```
 
- ###Run home server:###
+ ### Run home server: ###
  ```python3 homeServer.py```
 
-###Install Apache Web Server on EC2: ###
+### Install Apache Web Server on EC2: ###
 ```
 sudo apt-get update
 sudo apt-get install apache2 -y
 sudo systemctl start apache2
 sudo systemctl enable apache2
 ```
-###Compile proto message file:###
+### Compile proto message file: ###
 ```protoc --python_out=. message.proto```
 
-###Run aws server on an EC2 Instance:### 
+### Run aws server on an EC2 Instance: ### 
  ```python3 awsServer.py```
 
 Home Server (Laptop/ homeServer.py) <-----> AWS Server (awsServer.py)  <------> Client (Web)
